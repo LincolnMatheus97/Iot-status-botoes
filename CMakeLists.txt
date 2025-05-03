@@ -36,7 +36,8 @@ pico_sdk_init()
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(iot_status_botoes 
-        src/iot_status_botoes.c )
+        src/iot_status_botoes.c
+        src/utils/sensores.c)
 
 pico_set_program_name(iot_status_botoes "iot_status_botoes")
 pico_set_program_version(iot_status_botoes "0.1")
