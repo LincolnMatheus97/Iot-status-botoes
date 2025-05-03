@@ -35,7 +35,8 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(iot_status_botoes iot_status_botoes.c )
+add_executable(iot_status_botoes 
+        src/iot_status_botoes.c )
 
 pico_set_program_name(iot_status_botoes "iot_status_botoes")
 pico_set_program_version(iot_status_botoes "0.1")
@@ -46,17 +47,30 @@ pico_enable_stdio_usb(iot_status_botoes 1)
 
 # Add the standard library to the build
 target_link_libraries(iot_status_botoes
-        pico_stdlib)
+        pico_stdlib
+        hardware_adc
+        hardware_gpio
+        pico_cyw43_arch_lwip_threadsafe_background
+)
 
 # Add the standard include files to the build
 target_include_directories(iot_status_botoes PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/src
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils
+        ${CMAKE_CURRENT_LIST_DIR}/src/connection
+        ${PICO_SDK_PATH}/lib/lwip/src/include
+        ${PICO_SDK_PATH}/lib/lwip/src/include/arch
+        ${PICO_SDK_PATH}/lib/lwip/src/include/lwip
+
+)
+
+target_sources(iot_status_botoes PRIVATE
+    ${PICO_SDK_PATH}/lib/lwip/src/apps/http/httpd.c
+    ${PICO_SDK_PATH}/lib/lwip/src/apps/http/fs.c
 )
 
 # Add any user requested libraries
-target_link_libraries(iot_status_botoes 
-        pico_cyw43_arch_lwip_threadsafe_background
-        )
 
 pico_add_extra_outputs(iot_status_botoes)
 
