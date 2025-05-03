@@ -37,7 +37,8 @@ pico_sdk_init()
 
 add_executable(iot_status_botoes 
         src/iot_status_botoes.c
-        src/utils/sensores.c)
+        src/utils/sensores.c
+        src/connection/cliente_http.c)
 
 pico_set_program_name(iot_status_botoes "iot_status_botoes")
 pico_set_program_version(iot_status_botoes "0.1")
