@@ -1,6 +1,7 @@
 #ifndef CLIENTE_HTTP
 #define CLIENTE_HTTP
 
+// --- Inclui as bibliotecas necessárias ---
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,6 +11,7 @@
 #include "lwip/tcp.h"
 #include "src/utils/sensores.h"
 
+// --- Define o endereço do proxy e a porta---
 #define PROXY_HOST "maglev.proxy.rlwy.net"
 #define PROXY_PORT 48443
 

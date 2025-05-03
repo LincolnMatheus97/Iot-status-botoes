@@ -1,8 +1,10 @@
 #ifndef SENSORES_H
 #define SENSORES_H
 
+// --- Inclui as bibliotecas necessárias ---
 #include "pico/stdlib.h"
 
+// --- Define os pinos dos botões ---
 #define PIN_BOTAO_A 5
 #define PIN_BOTAO_B 6
 

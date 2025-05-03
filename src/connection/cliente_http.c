@@ -1,6 +1,13 @@
 #include "cliente_http.h"
 
-// --- Função para processar resposta do servidor ---
+/*
+* Função de callback chamada quando a resposta do servidor é recebida.
+* @param arg Argumento passado para a função de callback (não utilizado aqui).
+* @param pcb Ponteiro para o PCB TCP.
+* @param p Ponteiro para o buffer de dados recebidos.
+* @param err Código de erro (não utilizado aqui).
+* @return ERR_OK se a operação foi bem-sucedida.Se p for NULL, a conexão foi fechada pelo servidor. Nesse caso, o PCB é fechado.
+*/
 static err_t callback_resposta_recebida(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err) {
     
     if (!p) {
@@ -22,7 +29,13 @@ static err_t callback_resposta_recebida(void *arg, struct tcp_pcb *pcb, struct p
     return ERR_OK;
 }
 
-// --- Callback quando a conexão for estabelecida ---
+/*
+* Função de callback chamada quando a conexão TCP é estabelecida.
+* @param arg Argumento passado para a função de callback (não utilizado aqui).
+* @param pcb Ponteiro para o PCB TCP.
+* @param err Código de erro (se ERR_OK, a conexão foi estabelecida com sucesso).
+* @return ERR_OK se a operação foi bem-sucedida.Se err não for ERR_OK, a conexão falhou e o PCB é fechado.
+*/
 static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
     if (err != ERR_OK) {
         printf("Erro ao conectar: %d\n", err);
@@ -67,7 +80,12 @@ static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
     return ERR_OK;
 }
 
-// --- Callback quando DNS for resolvido ---
+/*
+* Função de callback chamada quando a resolução DNS é concluída.
+* @param nome_host Nome do host que foi resolvido.
+* @param ip_resolvido Ponteiro para o endereço IP resolvido.
+* @param arg Argumento passado para a função de callback (não utilizado aqui).
+*/
 static void callback_dns_resolvido(const char *nome_host, const ip_addr_t *ip_resolvido, void *arg) {
     if (!ip_resolvido) {
         printf("Erro: DNS falhou para %s\n", nome_host);
@@ -90,7 +108,12 @@ static void callback_dns_resolvido(const char *nome_host, const ip_addr_t *ip_re
     }
 }
 
-// --- Função principal chamada no loop ---
+/*
+* Função para enviar dados para a nuvem através do proxy.
+* Esta função tenta resolver o nome do host do proxy e, se bem-sucedida,
+* conecta-se ao proxy e envia os dados coletados (estado dos botões).
+* Se a resolução DNS falhar, imprime uma mensagem de erro.
+*/
 void enviar_dados_para_nuvem() {
     ip_addr_t endereco_ip;
     // Usar PROXY_HOST para resolução DNS
