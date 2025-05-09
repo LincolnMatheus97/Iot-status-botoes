@@ -1,7 +1,12 @@
 #include "wifi.h"
 #include "pico/cyw43_arch.h"
 
-
+/**
+ * @brief Inicializa a conexão Wi-Fi.
+ * @return 0 se a conexão for bem-sucedida, -1 caso contrário.
+ * @note Inicializa o módulo Wi-Fi, ativa o modo estação e tenta conectar à rede especificada.
+ *       O nome da rede e a senha são definidos nas constantes NOME_REDE_WIFI e SENHA_REDE_WIFI.
+ */
 int conexao_wifi() {
 
     int conexao;

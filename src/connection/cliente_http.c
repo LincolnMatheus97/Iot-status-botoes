@@ -1,13 +1,12 @@
 #include "cliente_http.h"
 
-/*
-* Função de callback chamada quando a resposta do servidor é recebida.
-* @param arg Argumento passado para a função de callback (não utilizado aqui).
-* @param pcb Ponteiro para o PCB TCP.
-* @param p Ponteiro para o buffer de dados recebidos.
-* @param err Código de erro (não utilizado aqui).
-* @return ERR_OK se a operação foi bem-sucedida.Se p for NULL, a conexão foi fechada pelo servidor. Nesse caso, o PCB é fechado.
-*/
+/**
+ * @brief Callback para receber a resposta do servidor.
+ * @param pcb PCB da conexão TCP.
+ * @param p Buffer de dados recebidos.
+ * @param err Código de erro.
+ * @return ERR_OK se tudo ocorrer bem, ou um código de erro.
+ */
 static err_t callback_resposta_recebida(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err) {
     
     if (!p) {
@@ -29,13 +28,15 @@ static err_t callback_resposta_recebida(void *arg, struct tcp_pcb *pcb, struct p
     return ERR_OK;
 }
 
-/*
-* Função de callback chamada quando a conexão TCP é estabelecida.
-* @param arg Argumento passado para a função de callback (não utilizado aqui).
-* @param pcb Ponteiro para o PCB TCP.
-* @param err Código de erro (se ERR_OK, a conexão foi estabelecida com sucesso).
-* @return ERR_OK se a operação foi bem-sucedida.Se err não for ERR_OK, a conexão falhou e o PCB é fechado.
-*/
+/**
+ * @brief Callback para quando a conexão TCP é estabelecida.
+ * @param arg Argumento passado para o callback (StatusBotoes*).
+ * @param pcb PCB da conexão TCP.
+ * @param err Código de erro.
+ * @note É aqui que a requisição HTTP é enviada, após a conexão ser estabelecida.
+ *      Tem que usar o PROXY_HOST no cabeçalho Host. 
+ * @return ERR_OK se tudo ocorrer bem, ou um código de erro.
+ */
 static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
     StatusBotoes* dados_recebidos = (StatusBotoes*)arg;
 
@@ -78,12 +79,14 @@ static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
     return ERR_OK;
 }
 
-/*
-* Função de callback chamada quando a resolução DNS é concluída.
-* @param nome_host Nome do host que foi resolvido.
-* @param ip_resolvido Ponteiro para o endereço IP resolvido.
-* @param arg Argumento passado para a função de callback (não utilizado aqui).
-*/
+/**
+ * @brief Callback para quando a resolução DNS é concluída.
+ * @param nome_host Nome do host que foi resolvido.
+ * @param ip_resolvido Endereço IP resolvido.
+ * @param arg Argumento passado para o callback (StatusBotoes*).
+ * @note Se a resolução falhar, imprime uma mensagem de erro. Em caso de sucesso,
+ *       ele segue para tentar a conexão TCP.
+ */
 static void callback_dns_resolvido(const char *nome_host, const ip_addr_t *ip_resolvido, void *arg) {
     StatusBotoes* dados_recebidos = (StatusBotoes*)arg;
     
@@ -110,12 +113,11 @@ static void callback_dns_resolvido(const char *nome_host, const ip_addr_t *ip_re
     }
 }
 
-/*
-* Função para enviar dados para a nuvem através do proxy.
-* Esta função tenta resolver o nome do host do proxy e, se bem-sucedida,
-* conecta-se ao proxy e envia os dados coletados (estado dos botões).
-* Se a resolução DNS falhar, imprime uma mensagem de erro.
-*/
+/**
+ * @brief Envia os dados dos botões para o servidor na nuvem.
+ * @param dados_a_enviar Ponteiro para a estrutura StatusBotoes com os dados a enviar.
+ * @note Usar PROXY_HOST para resolução DNS. Assim que o DNS for resolvido, a conexão TCP é estabelecida e os dados são enviados.
+ */
 void enviar_dados_para_nuvem(const StatusBotoes *dados_a_enviar) {
     ip_addr_t endereco_ip;
     // Usar PROXY_HOST para resolução DNS
