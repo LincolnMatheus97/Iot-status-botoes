@@ -24,8 +24,8 @@
 
 // -- DECLARAÇÕES  DE VARIAVEIS--
 StatusBotoes *status_botoes = NULL; // Estrutura para armazenar o estado dos botões
-bool estado_ant_botao_a = false;    // Variável para armazenar o estado anterior do botão A
-bool estado_ant_botao_b = false;    // Variável para armazenar o estado anterior do botão B
+bool estado_ant_botao_a;    // Variável para armazenar o estado anterior do botão A
+bool estado_ant_botao_b;    // Variável para armazenar o estado anterior do botão B
 
 /**
  * @brief Inicia a conexão Wi-Fi e exibe o status no display.
@@ -64,21 +64,29 @@ void atualizar_status_no_display(bool status_botao_a, bool status_botao_b)
 {
     limpar_display();
 
-    escrever_display("Status Botões", 22, 0, 1);
+    escrever_display("Status Botoes", 22, 0, 1);
 
     char status_a[15];
-    (status_botao_a = true) ? (strcmp(status_a, "Pressionado")) : (strcmp(status_a, "Solto"));
+    if (status_botao_a) { 
+        strcpy(status_a, "Pressionado");
+    } else {
+        strcpy(status_a, "Solto");
+    }
 
     char status_b[15];
-    (status_botao_b = true) ? (strcmp(status_b, "Pressionado")) : (strcmp(status_b, "Solto"));
+    if (status_botao_b) { 
+        strcpy(status_b, "Pressionado");
+    } else {
+        strcpy(status_b, "Solto");
+    }
 
-    char dados_botao_a[20];
-    snprintf(dados_botao_a, sizeof(dados_botao_a), "Botão A: %s ", status_a);
+    char dados_botao_a[30];
+    snprintf(dados_botao_a, sizeof(dados_botao_a), "Botao A: %s ", status_a);
     escrever_display(dados_botao_a, 5, 32, 1);
 
-    char dados_botao_b[20];
-    snprintf(dados_botao_b, sizeof(dados_botao_b), "Botão B: %s ", status_b);
-    escrever_display(dados_botao_b, 6, 32, 1);
+    char dados_botao_b[30];
+    snprintf(dados_botao_b, sizeof(dados_botao_b), "Botao B: %s ", status_b);
+    escrever_display(dados_botao_b, 5, 42, 1);
 
     mostrar_display();
 }
@@ -90,6 +98,7 @@ void atualizar_status_no_display(bool status_botao_a, bool status_botao_b)
 void iniciar_perifericos()
 {
     stdio_init_all();
+    inicializar_botoes();
     inic_barr_i2c();
     inic_display();
 
@@ -121,7 +130,7 @@ int main()
 
     while (true)
     {
-        cyw43_arch_poll(); // Verifica se há pacotes recebidos e processa-os
+        cyw43_arch_poll(); 
 
         bool estado_atual_botao_a = botao_a_pressionado();
         bool estado_atual_botao_b = botao_b_pressionado();
@@ -136,8 +145,6 @@ int main()
             atualizar_status_no_display(status_botoes->botao_a, status_botoes->botao_b);
             
             enviar_dados_para_nuvem(status_botoes);
-
-            // Atualiza os valores anteriores para a próxima comparação
             
             estado_ant_botao_a = status_botoes->botao_a;
             estado_ant_botao_b = status_botoes->botao_b;
