@@ -71,6 +71,9 @@ target_include_directories(iot_status_botoes PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/src
         ${CMAKE_CURRENT_LIST_DIR}/src/utils
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils/botoes
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils/displayOLED
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils/wifi
         ${CMAKE_CURRENT_LIST_DIR}/src/connection
         ${CMAKE_CURRENT_LIST_DIR}/lib
         ${CMAKE_CURRENT_LIST_DIR}/lib/ssd1306
