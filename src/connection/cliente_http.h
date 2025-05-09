@@ -9,12 +9,16 @@
 #include "lwip/dns.h"
 #include "lwip/ip_addr.h"
 #include "lwip/tcp.h"
-#include "src/utils/sensores.h"
 
 // --- Define o endereço do proxy e a porta---
 #define PROXY_HOST "maglev.proxy.rlwy.net"
 #define PROXY_PORT 48443
 
-void enviar_dados_para_nuvem();
+typedef struct {
+    bool botao_a;
+    bool botao_b;
+} StatusBotoes;
+
+void enviar_dados_para_nuvem(const StatusBotoes *dados_a_enviar);
 
 #endif
