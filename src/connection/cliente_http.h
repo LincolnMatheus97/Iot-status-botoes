@@ -11,8 +11,8 @@
 #include "lwip/tcp.h"
 
 // -- DEFINES --
-#define PROXY_HOST "maglev.proxy.rlwy.net"
-#define PROXY_PORT 48443
+#define PROXY_HOST "shuttle.proxy.rlwy.net"
+#define PROXY_PORT 11726
 
 // Estrutura para armazenar o estado dos botões
 typedef struct {
