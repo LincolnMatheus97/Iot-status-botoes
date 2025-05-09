@@ -1,19 +1,37 @@
+/**
+ * @file iot_status_botoes.c
+ * @brief Código principal do projeto IoT Status Botões.
+ * @author Lincoln Matheus Costa Campelo Pinho
+ * @date 2025-05-08
+ * @version 1.0
+ * @details
+ * Este código implementa um sistema IoT que monitora o estado de dois botões (A e B) e envia os dados para a nuvem.
+ * O sistema utiliza um microcontrolador Raspberry Pi Pico W, que se conecta a uma rede Wi-Fi e envia os dados coletados via HTTP.
+ */
+
+// -- INCLUDES --
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
+// -- INCLUDES DO PROJETO --
 #include "botoes.h"
 #include "cliente_http.h"
 #include "wifi.h"
 #include "display.h"
 
-StatusBotoes *status_botoes = NULL;
+// -- DECLARAÇÕES  DE VARIAVEIS--
+StatusBotoes *status_botoes = NULL; // Estrutura para armazenar o estado dos botões
+bool estado_ant_botao_a = false;    // Variável para armazenar o estado anterior do botão A
+bool estado_ant_botao_b = false;    // Variável para armazenar o estado anterior do botão B
 
-bool estado_ant_botao_a = false;
-bool estado_ant_botao_b = false;
-
+/**
+ * @brief Inicia a conexão Wi-Fi e exibe o status no display.
+ * @return 0 se a conexão for bem-sucedida, -1 caso contrário.
+ * @note Inicializa o módulo Wi-Fi, ativa o modo estação e tenta conectar à rede especificada.
+ */
 int iniciar_conexao_wifi() 
 {
     limpar_display();
@@ -36,6 +54,12 @@ int iniciar_conexao_wifi()
     return status_conexao;
 }
 
+/**
+ * @brief Atualiza o status dos botões no display OLED.
+ * @param status_botao_a Status do botão A (pressionado ou solto).
+ * @param status_botao_b Status do botão B (pressionado ou solto).
+ * @note Limpa o display e exibe o status atual dos botões.
+ */
 void atualizar_status_no_display(bool status_botao_a, bool status_botao_b)
 {
     limpar_display();
@@ -59,6 +83,10 @@ void atualizar_status_no_display(bool status_botao_a, bool status_botao_b)
     mostrar_display();
 }
 
+/**
+ * @brief Inicializa os periféricos do sistema.
+ * @note Inicializa a comunicação serial, o I2C, o display OLED e os botões.
+ */
 void iniciar_perifericos()
 {
     stdio_init_all();
@@ -70,6 +98,13 @@ void iniciar_perifericos()
     status_botoes->botao_b = false;
 }
 
+/**
+ * @brief Função principal do programa.
+ * @return 0 se o programa for executado com sucesso.
+ * @note Inicializa os periféricos, a conexão Wi-Fi e lê os estados dos botões.
+ *      Atualiza o status dos botões no display e envia os dados para a nuvem.
+ *      O loop principal verifica continuamente o estado dos botões e atualiza o display e a nuvem conforme necessário.
+ */
 int main()
 {
     iniciar_perifericos(); 
