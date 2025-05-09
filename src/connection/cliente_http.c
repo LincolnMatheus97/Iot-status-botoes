@@ -37,6 +37,8 @@ static err_t callback_resposta_recebida(void *arg, struct tcp_pcb *pcb, struct p
 * @return ERR_OK se a operação foi bem-sucedida.Se err não for ERR_OK, a conexão falhou e o PCB é fechado.
 */
 static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
+    StatusBotoes* dados_recebidos = (StatusBotoes*)arg;
+
     if (err != ERR_OK) {
         printf("Erro ao conectar: %d\n", err);
         tcp_abort(pcb);
@@ -45,14 +47,10 @@ static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
 
     tcp_recv(pcb, callback_resposta_recebida);
 
-    // Coletar dados
-    bool botao_a = botao_a_pressionado();
-    bool botao_b = botao_b_pressionado();
-
     char corpo_json[128];
     snprintf(corpo_json, sizeof(corpo_json),
              "{\"botao_a\": %d, \"botao_b\": %d}",
-             botao_a, botao_b);
+             dados_recebidos->botao_a, dados_recebidos->botao_b);
 
     char requisicao[512];
     // Usar PROXY_HOST no cabeçalho Host
@@ -87,6 +85,8 @@ static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
 * @param arg Argumento passado para a função de callback (não utilizado aqui).
 */
 static void callback_dns_resolvido(const char *nome_host, const ip_addr_t *ip_resolvido, void *arg) {
+    StatusBotoes* dados_recebidos = (StatusBotoes*)arg;
+    
     if (!ip_resolvido) {
         printf("Erro: DNS falhou para %s\n", nome_host);
         return;
@@ -99,6 +99,8 @@ static void callback_dns_resolvido(const char *nome_host, const ip_addr_t *ip_re
         printf("Erro ao criar pcb\n");
         return;
     }
+
+    tcp_arg(pcb, arg);
 
     // Conectar à porta do PROXY
     err_t erro = tcp_connect(pcb, ip_resolvido, PROXY_PORT, callback_conectado);
@@ -114,10 +116,10 @@ static void callback_dns_resolvido(const char *nome_host, const ip_addr_t *ip_re
 * conecta-se ao proxy e envia os dados coletados (estado dos botões).
 * Se a resolução DNS falhar, imprime uma mensagem de erro.
 */
-void enviar_dados_para_nuvem() {
+void enviar_dados_para_nuvem(const StatusBotoes *dados_a_enviar) {
     ip_addr_t endereco_ip;
     // Usar PROXY_HOST para resolução DNS
-    err_t resultado_dns = dns_gethostbyname(PROXY_HOST, &endereco_ip, callback_dns_resolvido, NULL);
+    err_t resultado_dns = dns_gethostbyname(PROXY_HOST, &endereco_ip, callback_dns_resolvido, (void*) dados_a_enviar);
 
     if (resultado_dns == ERR_OK) {
         // Se já resolvido (cache), conectar diretamente à porta do PROXY
@@ -128,6 +130,8 @@ void enviar_dados_para_nuvem() {
             printf("Erro ao criar pcb (cache)\n");
             return;
         }
+
+        tcp_arg(pcb, (void*)dados_a_enviar);
 
         // Conectar à porta do PROXY
         err_t erro = tcp_connect(pcb, &endereco_ip, PROXY_PORT, callback_conectado);
