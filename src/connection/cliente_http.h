@@ -1,7 +1,7 @@
 #ifndef CLIENTE_HTTP
 #define CLIENTE_HTTP
 
-// --- Inclui as bibliotecas necessárias ---
+// -- INCLUDES --
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,10 +10,11 @@
 #include "lwip/ip_addr.h"
 #include "lwip/tcp.h"
 
-// --- Define o endereço do proxy e a porta---
+// -- DEFINES --
 #define PROXY_HOST "maglev.proxy.rlwy.net"
 #define PROXY_PORT 48443
 
+// Estrutura para armazenar o estado dos botões
 typedef struct {
     bool botao_a;
     bool botao_b;

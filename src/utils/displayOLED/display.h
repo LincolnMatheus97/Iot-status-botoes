@@ -1,12 +1,12 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-
+// -- INCLUDES --
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
 
-
+// -- DEFINES DO DISPLAY --
 #define I2C_PORT i2c1
 #define I2C_SDA 14
 #define I2C_SCL 15
