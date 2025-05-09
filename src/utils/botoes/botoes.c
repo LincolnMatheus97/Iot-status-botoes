@@ -1,4 +1,4 @@
-#include "sensores.h"
+#include "botoes.h"
 
 /*
 * Função para inicializar os botões.

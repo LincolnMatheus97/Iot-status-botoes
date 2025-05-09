@@ -1,5 +1,5 @@
-#ifndef SENSORES_H
-#define SENSORES_H
+#ifndef BOTOES_H
+#define BOTOES_H
 
 // --- Inclui as bibliotecas necessárias ---
 #include "pico/stdlib.h"

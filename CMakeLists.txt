@@ -33,12 +33,22 @@ project(iot_status_botoes C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+file(GLOB_RECURSE MAIN "src/iot_status_botoes.c")
+
+file(GLOB_RECURSE UTILS "src/utils/**/*c")
+
+file(GLOB_RECURSE LIB "lib/ssd1306/*c")
+
+file(GLOB_RECURSE CONNECTION "src/connection/*c")
+
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(iot_status_botoes 
-        src/iot_status_botoes.c
-        src/utils/sensores.c
-        src/connection/cliente_http.c)
+        ${MAIN}
+        ${UTILS}
+        ${LIB}
+        ${CONNECTION}
+)
 
 pico_set_program_name(iot_status_botoes "iot_status_botoes")
 pico_set_program_version(iot_status_botoes "0.1")
@@ -52,6 +62,7 @@ target_link_libraries(iot_status_botoes
         pico_stdlib
         hardware_adc
         hardware_gpio
+        hardware_i2c
         pico_cyw43_arch_lwip_threadsafe_background
 )
 
@@ -60,16 +71,12 @@ target_include_directories(iot_status_botoes PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/src
         ${CMAKE_CURRENT_LIST_DIR}/src/utils
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils/botoes
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils/displayOLED
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils/wifi
         ${CMAKE_CURRENT_LIST_DIR}/src/connection
-        ${PICO_SDK_PATH}/lib/lwip/src/include
-        ${PICO_SDK_PATH}/lib/lwip/src/include/arch
-        ${PICO_SDK_PATH}/lib/lwip/src/include/lwip
-
-)
-
-target_sources(iot_status_botoes PRIVATE
-    ${PICO_SDK_PATH}/lib/lwip/src/apps/http/httpd.c
-    ${PICO_SDK_PATH}/lib/lwip/src/apps/http/fs.c
+        ${CMAKE_CURRENT_LIST_DIR}/lib
+        ${CMAKE_CURRENT_LIST_DIR}/lib/ssd1306
 )
 
 # Add any user requested libraries
