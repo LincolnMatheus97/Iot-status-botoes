@@ -112,7 +112,8 @@ void iniciar_perifericos()
  * @return 0 se o programa for executado com sucesso.
  * @note Inicializa os periféricos, a conexão Wi-Fi e lê os estados dos botões.
  *      Atualiza o status dos botões no display e envia os dados para a nuvem.
- *      O loop principal verifica continuamente o estado dos botões e atualiza o display e a nuvem conforme necessário.
+ *      O loop principal verifica continuamente o estado dos botões e envia para nuvem apenas se,
+ *      tiver ocorrido mudanças, a cada verificação atualiza o display.
  */
 int main()
 {
