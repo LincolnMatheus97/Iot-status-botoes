@@ -62,12 +62,12 @@ A placa BitDogLab envia os dados para uma API Flask hospedada na plataforma Rail
 ### 🔌 Como funciona:
 
 - O Railway fornece um **host e uma porta TCP** dedicados (ex: `containers.up.railway.app:12345`) para que dispositivos externos possam se comunicar diretamente com a aplicação, mesmo sem HTTPS.
-- A placa envia as requisições HTTP diretamente para esse host, usando o caminho `/dados`.
+- A placa envia as requisições HTTP diretamente para esse host, usando o caminho `PROXY_HOST`.
 
 ### 📌 Exemplo de configuração:
 ```c
-#define HOST "containers.up.railway.app"
-#define PORTA 12345
+#define PROXY_HOST "containers.up.railway.app"
+#define PROXY_PORT 12345
 ```
 
 > ⚠️ A API está preparada para receber esses dados e retransmiti-los via WebSocket em tempo real para dashboards HTML acessados via navegador.
@@ -90,8 +90,8 @@ Este projeto usa o **Pico SDK versão 1.5.1** e deve ser importado corretamente 
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/LincolnMatheus97/Iot-rosa-do-ventos.git
-   cd Iot-rosa-dos-ventos
+   git clone https://github.com/LincolnMatheus97/Iot-status-botoes.git
+   cd Iot-status-botoes
    ```
 
 2. **Importe no VS Code com a extensão "Raspeberry Pi Pico Project":**
