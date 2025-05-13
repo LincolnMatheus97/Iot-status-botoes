@@ -56,7 +56,7 @@ static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
     char requisicao[512];
     // Usar PROXY_HOST no cabeçalho Host
     snprintf(requisicao, sizeof(requisicao),
-             "POST /dados HTTP/1.1\r\n"
+             "POST /dadosbotoes HTTP/1.1\r\n"
              "Host: %s\r\n"
              "Content-Type: application/json\r\n"
              "Content-Length: %d\r\n"
